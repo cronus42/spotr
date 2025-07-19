@@ -1,3 +1,6 @@
+import argparse
+from typing import Any
+
 from .client import build as build_client
 from .config import Config
 from .instance import destroy as destroy_instance
@@ -5,7 +8,7 @@ from .instance import find_latest as find_latest_instance
 from .spin_cursor import spin
 
 
-def destroy(args):
+def destroy(args: argparse.Namespace) -> Any:
     client = build_client(args)
     conf = Config(client, args)
     instance = find_latest_instance(client, conf)
@@ -18,5 +21,5 @@ def destroy(args):
     return destroyed
 
 
-def _log_instance_destroyed(instance):
-    print(">> Instance {0} destroyed".format(instance.id))
+def _log_instance_destroyed(instance: Any) -> None:
+    print(f">> Instance {instance.id} destroyed")

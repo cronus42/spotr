@@ -1,9 +1,11 @@
 import boto3
 
 import functools
+import argparse
+from typing import Any
 
 
-def build(args):
+def build(args: argparse.Namespace) -> Any:
     if args.region:
         boto3.setup_default_session(region_name=args.region)
 

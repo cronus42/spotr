@@ -1,5 +1,6 @@
 import argparse
 import sys
+from typing import NoReturn
 
 from .launch import launch
 from .destroy import destroy
@@ -82,7 +83,7 @@ list_parser.add_argument(
 list_parser.set_defaults(func=list_instances)
 
 
-def main():
+def main() -> NoReturn:
     if len(sys.argv) == 1:
         parser.print_help()
         sys.exit(1)

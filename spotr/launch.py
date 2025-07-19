@@ -1,3 +1,6 @@
+from typing import Any
+import argparse
+
 from .pricing import get_az
 from .spot_instance import request
 from .instance import tag as tag_instance
@@ -11,7 +14,7 @@ from .dns import build_client as dns_build_client
 from .dns import set_record
 
 
-def launch(args):
+def launch(args: argparse.Namespace) -> Any:
     client = build_client(args)
     conf = Config(client, args)
 
@@ -27,7 +30,7 @@ def launch(args):
     # map the subnet_id from the config vars
     conf.set_subnet_id(conf.map_subnet_id(conf.az))
 
-    with spin("Launching: " + str(az)):
+    with spin(f"Launching: {az}"):
         inst = request(client, conf, tag_instance, get_by_instance_id, open_port)
 
     _log_instance_creation(inst, key_path)
@@ -38,7 +41,7 @@ def launch(args):
     return inst
 
 
-def _log_instance_creation(instance, key_path):
-    print(">> Instance " + instance.id + " launched, connect with:")
+def _log_instance_creation(instance: Any, key_path: str) -> None:
+    print(f">> Instance {instance.id} launched, connect with:")
     ip = str(instance.ip_address)
-    print("ssh -i " + key_path + " ubuntu@" + ip)
+    print(f"ssh -i {key_path} ubuntu@{ip}")

@@ -1,8 +1,12 @@
 import boto3
 import functools
+import argparse
+from typing import Any
+
+from .config import Config
 
 
-def build_client(args):
+def build_client(args: argparse.Namespace) -> Any:
     if args.region:
         boto3.setup_default_session(region_name=args.region)
 
@@ -18,8 +22,8 @@ def build_client(args):
         return client()
 
 
-def set_record(client, instance, conf):
-    print("Setting DNS record {} to point to IP address {}...".format(conf.record_name, instance.ip_address))
+def set_record(client: Any, instance: Any, conf: Config) -> None:
+    print(f"Setting DNS record {conf.record_name} to point to IP address {instance.ip_address}...")
     client.change_resource_record_sets(
         HostedZoneId=conf.hosted_zone_id,
         ChangeBatch={
@@ -38,5 +42,3 @@ def set_record(client, instance, conf):
             ]
         }
     )
-
-    return
