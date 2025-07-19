@@ -39,6 +39,6 @@ def launch(args):
 
 
 def _log_instance_creation(instance, key_path):
-    print(">> Instance launched, connect with:")
+    print(">> Instance " + instance.id + " launched, connect with:")
     ip = str(instance.ip_address)
     print("ssh -i " + key_path + " ubuntu@" + ip)

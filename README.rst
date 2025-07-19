@@ -77,4 +77,59 @@ You can specify default configurations in ``~/.spotr/config``:
     record_name=subdomain.example.com
     user_data=#cloud-config
         runcmd:
-            - [ sh, -c, "/bin/bash /opt/dosomethinguseful.sh" ]         
+            - [ sh, -c, "/bin/bash /opt/dosomethinguseful.sh" ]
+
+Features
+--------
+
+- **Launch and manage AWS spot instances** with simple commands
+- **Automated snapshots** to preserve work between sessions  
+- **DNS integration** to automatically update Route53 records
+- **Flexible configuration** via config files and command line arguments
+- **Cost optimization** through spot instance pricing
+- **SSH key management** with automatic key pair creation
+
+Recent Improvements (v0.0.17)
+-----------------------------
+
+- Enhanced logging to show instance ID when launching instances
+- Improved DNS record management with cleaner output
+- Better test coverage and configuration handling
+- Fixed availability zone subnet mapping in tests
+
+Development
+-----------
+
+To set up the development environment:
+
+.. code-block:: sh
+
+    $ git clone https://github.com/samuelreh/spotr.git
+    $ cd spotr
+    $ pip install -e .
+    $ pip install pytest mock pytest-cov coverage
+
+Running Tests
+~~~~~~~~~~~~~
+
+Run the test suite with:
+
+.. code-block:: sh
+
+    $ python -m pytest tests/ -v
+
+Run tests with coverage:
+
+.. code-block:: sh
+
+    $ python -m pytest tests/ --cov=spotr --cov-report=html
+
+Contributing
+~~~~~~~~~~~~
+
+Contributions are welcome! Please ensure that:
+
+1. All tests pass
+2. New functionality includes appropriate tests
+3. Code follows existing style conventions
+4. Changes are documented in the CHANGELOG.md

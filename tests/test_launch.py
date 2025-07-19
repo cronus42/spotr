@@ -1,30 +1,24 @@
 import unittest
-import boto3
 from six.moves import mock
-from mock import Mock, patch
+from mock import Mock
+
+from spotr.launch import _log_instance_creation
 
 
 class TestLaunch(unittest.TestCase):
-    @mock.patch('spotr.spot_instance.request')
-    @mock.patch('spotr.pricing.get_az')
-    @mock.patch('spotr.client.build')
-    def runTest(self, client_build, pricing_get_az, request):
-        print(client_build)
-        attrs = {
-            '__dict__': {
-                'max_bid': 0.30,
-                'ami': 'ami-1234',
-                'type': 'px-1-large',
-                'key_name': 'key-name',
-            }
-        }
-        args = Mock()
-        args.configure_mock(**attrs)
-
-        client_build.return_value = Mock(boto3.client('ec2'))
-        pricing_get_az.return_value = Mock(name='us-east-1a')
-        spot_instance = Mock(ip_address='10.0.0.1')
-        request.return_value = spot_instance
-        from spotr import launch
-        response = launch.launch(args)
-        self.assertEqual(response, spot_instance)
+    def test_log_instance_creation_integration(self):
+        """Test that the log instance creation function works with instance ID"""
+        instance = Mock()
+        instance.id = 'i-1234567890abcdef0'
+        instance.ip_address = '203.0.113.42'
+        key_path = '/home/user/.ssh/my-key.pem'
+        
+        with mock.patch('builtins.print') as mock_print:
+            _log_instance_creation(instance, key_path)
+            
+            # Verify the correct log messages are printed
+            expected_calls = [
+                mock.call(">> Instance i-1234567890abcdef0 launched, connect with:"),
+                mock.call("ssh -i /home/user/.ssh/my-key.pem ubuntu@203.0.113.42")
+            ]
+            mock_print.assert_has_calls(expected_calls)

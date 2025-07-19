@@ -38,6 +38,5 @@ def set_record(client, instance, conf):
             ]
         }
     )
-    print('IP Address: {}'.format(instance.ip_address))
 
     return
