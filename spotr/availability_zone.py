@@ -1,4 +1,3 @@
-
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 
@@ -11,7 +10,7 @@ class AvailabilityZone:
     @property
     def current_price(self) -> Optional[float]:
         if self.price_history:
-            return float(self.price_history[0]['SpotPrice'])
+            return float(self.price_history[0]["SpotPrice"])
         else:
             return None
 

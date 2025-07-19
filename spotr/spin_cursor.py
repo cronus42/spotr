@@ -18,9 +18,9 @@ def spin(message: str) -> Generator[None, None, None]:
 
 
 class SpinCursor(threading.Thread):
-    """ A console spin cursor class """
+    """A console spin cursor class"""
 
-    def __init__(self, msg: str = '', maxspin: int = 0, minspin: int = 10, speed: int = 5) -> None:
+    def __init__(self, msg: str = "", maxspin: int = 0, minspin: int = 10, speed: int = 5) -> None:
         # Count of a spin
         self.count: int = 0
         self.out = sys.stdout
@@ -30,20 +30,20 @@ class SpinCursor(threading.Thread):
         # Any message to print first ?
         self.msg: str = msg
         # Complete printed string
-        self.string: str = ''
+        self.string: str = ""
         # Speed is given as number of spins a second
         # Use it to calculate spin wait time
         self.waittime: float = 1.0 / float(speed * 4)
-        if os.name == 'posix':
-            self.spinchars: tuple = (unicodedata.lookup('FIGURE DASH'), '\\ ', '| ', '/ ')
+        if os.name == "posix":
+            self.spinchars: tuple = (unicodedata.lookup("FIGURE DASH"), "\\ ", "| ", "/ ")
         else:
             # The unicode dash character does not show
             # up properly in Windows console.
-            self.spinchars = ('-', '\\ ', '| ', '/ ')
+            self.spinchars = ("-", "\\ ", "| ", "/ ")
         threading.Thread.__init__(self, None, None, "Spin Thread")
 
     def spin(self) -> None:
-        """ Perform a single spin """
+        """Perform a single spin"""
 
         for x in self.spinchars:
             self.string = f"{self.msg}...\t{x}\r"

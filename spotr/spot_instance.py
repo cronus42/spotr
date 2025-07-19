@@ -10,7 +10,7 @@ def request(client, config, tag, get_by_instance_id, open_port):
     time.sleep(2)
 
     request = _describe_request(client, request_id)
-    if request.status_code == 'price-too-low':
+    if request.status_code == "price-too-low":
         raise RuntimeError(request.status_message)
 
     _wait_until_completed(client, request_id)
@@ -32,40 +32,40 @@ def _perform_request(client, config):
     else:
         security_group_ids = [config.security_group_id]
     if config.iam_instance_profile_arn is None:
-        iam_instance_profile_arn = ''
+        iam_instance_profile_arn = ""
     else:
         iam_instance_profile_arn = config.iam_instance_profile_arn
     if config.user_data is None:
-        user_data = ''
+        user_data = ""
     else:
-        user_data = config.user_data.encode('ascii')
-        user_data = base64.b64encode(bytes(user_data)).decode('ascii')
+        user_data = config.user_data.encode("ascii")
+        user_data = base64.b64encode(bytes(user_data)).decode("ascii")
     response = client.request_spot_instances(
         SpotPrice=config.max_bid,
         ClientToken=random_id,
         InstanceCount=1,
-        Type='one-time',
+        Type="one-time",
         LaunchSpecification={
-            'ImageId': config.ami,
-            'KeyName': config.key_name,
-            'InstanceType': config.type,
-            'Placement': {
-                'AvailabilityZone': config.az,
+            "ImageId": config.ami,
+            "KeyName": config.key_name,
+            "InstanceType": config.type,
+            "Placement": {
+                "AvailabilityZone": config.az,
             },
-            'SecurityGroupIds': security_group_ids,
-            'SubnetId': config.subnet_id,
-            'EbsOptimized': config.ebs_optimized,
-            'IamInstanceProfile': {
+            "SecurityGroupIds": security_group_ids,
+            "SubnetId": config.subnet_id,
+            "EbsOptimized": config.ebs_optimized,
+            "IamInstanceProfile": {
                 "Arn": iam_instance_profile_arn,
             },
-            'UserData': user_data
-        }
+            "UserData": user_data,
+        },
     )
-    return response.get('SpotInstanceRequests')[0].get('SpotInstanceRequestId')
+    return response.get("SpotInstanceRequests")[0].get("SpotInstanceRequestId")
 
 
 def _wait_until_completed(client, request_id):
-    waiter = client.get_waiter('spot_instance_request_fulfilled')
+    waiter = client.get_waiter("spot_instance_request_fulfilled")
     return waiter.wait(SpotInstanceRequestIds=[request_id])
 
 
@@ -73,11 +73,11 @@ def _describe_request(client, request_id):
     response = client.describe_spot_instance_requests(
         SpotInstanceRequestIds=[request_id],
     )
-    return SpotInstanceRequest(response.get('SpotInstanceRequests')[0])
+    return SpotInstanceRequest(response.get("SpotInstanceRequests")[0])
 
 
 def _wait_until_running(client, instance_id):
-    waiter = client.get_waiter('instance_running')
+    waiter = client.get_waiter("instance_running")
     return waiter.wait(InstanceIds=[instance_id])
 
 
@@ -88,6 +88,6 @@ class SpotInstanceRequest:
     status_message: str
 
     def __init__(self, response):
-        self.instance_id = response.get('InstanceId')
-        self.status_code = response.get('Status').get('Code')
-        self.status_message = response.get('Status').get('Message')
+        self.instance_id = response.get("InstanceId")
+        self.status_code = response.get("Status").get("Code")
+        self.status_message = response.get("Status").get("Message")

@@ -19,9 +19,9 @@ def get_az(client, config):
 
 def _get_zone_names(client):
     zone_names = []
-    for zone in client.describe_availability_zones()['AvailabilityZones']:
-        if zone['State'] == 'available':
-            zone_names.append(zone['ZoneName'])
+    for zone in client.describe_availability_zones()["AvailabilityZones"]:
+        if zone["State"] == "available":
+            zone_names.append(zone["ZoneName"])
     return zone_names
 
 
@@ -32,8 +32,9 @@ def _get_price_history(client, zone_name, instance_type):
         EndTime=datetime.datetime.now(),
         InstanceTypes=[instance_type],
         AvailabilityZone=zone_name,
-        ProductDescriptions=['Linux/UNIX'])
-    return response.get('SpotPriceHistory', [])
+        ProductDescriptions=["Linux/UNIX"],
+    )
+    return response.get("SpotPriceHistory", [])
 
 
 def _score(az):

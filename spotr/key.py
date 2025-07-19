@@ -8,7 +8,7 @@ def find_or_create(client: Any, conf_key_name: str) -> str:
     if not path.exists():
         response = client.create_key_pair(KeyName=conf_key_name)
 
-        with os.fdopen(os.open(str(path), os.O_WRONLY | os.O_CREAT, 0o400), 'w') as handle:
-            handle.write(response['KeyMaterial'])
+        with os.fdopen(os.open(str(path), os.O_WRONLY | os.O_CREAT, 0o400), "w") as handle:
+            handle.write(response["KeyMaterial"])
 
     return str(path)
