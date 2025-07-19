@@ -1,5 +1,4 @@
 from .ami import get_by_tag
-import six
 import os.path
 from botocore.configloader import raw_config_parse
 
@@ -12,7 +11,7 @@ class Config:
             self._config = raw_config_parse(config_file_path)['config']
         else:
             self._config = {}
-        self._config.update({k: v for k, v in six.iteritems(vars(args)) if v})
+        self._config.update({k: v for k, v in vars(args).items() if v})
 
     def map_subnet_id(self, az):
         subnet_var = az + "_subnet_id"

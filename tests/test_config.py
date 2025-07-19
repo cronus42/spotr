@@ -2,7 +2,7 @@ import datetime
 import unittest
 import boto3
 
-from six.moves import mock
+from unittest import mock
 
 from spotr.config import Config
 

@@ -1,5 +1,5 @@
 import unittest
-from six.moves import mock
+from unittest import mock
 from mock import Mock
 
 from spotr.launch import _log_instance_creation

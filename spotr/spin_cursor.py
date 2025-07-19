@@ -34,11 +34,11 @@ class SpinCursor(threading.Thread):
         # Use it to calculate spin wait time
         self.waittime = 1.0 / float(speed * 4)
         if os.name == 'posix':
-            self.spinchars = (unicodedata.lookup('FIGURE DASH'), u'\\ ', u'| ', u'/ ')
+            self.spinchars = (unicodedata.lookup('FIGURE DASH'), '\\ ', '| ', '/ ')
         else:
             # The unicode dash character does not show
             # up properly in Windows console.
-            self.spinchars = (u'-', u'\\ ', u'| ', u'/ ')
+            self.spinchars = ('-', '\\ ', '| ', '/ ')
         threading.Thread.__init__(self, None, None, "Spin Thread")
 
     def spin(self):

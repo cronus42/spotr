@@ -1,6 +1,6 @@
 import unittest
 import datetime
-from six.moves import mock
+from unittest import mock
 
 from spotr.pricing import get_az, _get_zone_names, _get_price_history, _score
 from spotr.availability_zone import AvailabilityZone

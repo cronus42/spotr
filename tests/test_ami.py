@@ -1,5 +1,5 @@
 import unittest
-from six.moves import mock
+from unittest import mock
 
 from spotr.ami import get_by_tag
 

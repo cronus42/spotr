@@ -1,6 +1,6 @@
 import unittest
 import boto3
-from six.moves import mock
+from unittest import mock
 
 from spotr.dns import build_client, set_record
 
