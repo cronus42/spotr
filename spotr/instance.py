@@ -1,4 +1,14 @@
+from dataclasses import dataclass
+from typing import List, Dict, Any
+
+@dataclass(init=False)
 class Instance:
+    id: str
+    volume_id: str
+    launch_time: str
+    ip_address: str
+    security_groups: List[Dict[str, Any]]
+
     def __init__(self, response):
         self.id = response['InstanceId']
         self.volume_id = response['BlockDeviceMappings'][0]['Ebs']['VolumeId']
@@ -11,7 +21,10 @@ class Instance:
         return not len(self.security_groups) == 0
 
 
+@dataclass(init=False)
 class InstanceList:
+    instances: List[Instance]
+
     def __init__(self, response):
         self.instances = []
         for reservation in response['Reservations']:

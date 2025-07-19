@@ -1,11 +1,14 @@
 
+from dataclasses import dataclass
+from typing import List, Dict, Any, Optional
+
+@dataclass
 class AvailabilityZone:
-    def __init__(self, zone_name, price_history):
-        self.zone_name = zone_name
-        self.price_history = price_history
+    zone_name: str
+    price_history: List[Dict[str, Any]]
 
     @property
-    def current_price(self):
+    def current_price(self) -> Optional[float]:
         if self.price_history:
             return float(self.price_history[0]['SpotPrice'])
         else:
@@ -14,4 +17,4 @@ class AvailabilityZone:
     def __repr__(self):
         price = str(self.current_price)
         zone_name = self.zone_name
-        return "%s for $%s/hr" % (zone_name, price)
+        return f"{zone_name} for ${price}/hr"

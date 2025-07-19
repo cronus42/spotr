@@ -1,6 +1,8 @@
 import random
 import time
 import base64
+from dataclasses import dataclass
+from typing import Optional
 
 
 def request(client, config, tag, get_by_instance_id, open_port):
@@ -79,8 +81,13 @@ def _wait_until_running(client, instance_id):
     return waiter.wait(InstanceIds=[instance_id])
 
 
+@dataclass(init=False)
 class SpotInstanceRequest:
-    def __init__(this, response):
-        this.instance_id = response.get('InstanceId')
-        this.status_code = response.get('Status').get('Code')
-        this.status_message = response.get('Status').get('Message')
+    instance_id: Optional[str]
+    status_code: str
+    status_message: str
+
+    def __init__(self, response):
+        self.instance_id = response.get('InstanceId')
+        self.status_code = response.get('Status').get('Code')
+        self.status_message = response.get('Status').get('Message')

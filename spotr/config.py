@@ -90,6 +90,6 @@ class Config:
         return self._config.get('record_name')
 
     def _get_required(self, key: str) -> str:
-        if not self._config.get(key):
+        if not (value := self._config.get(key)):
             raise RuntimeError(f"Missing required parameter: {key}")
-        return self._config.get(key)
+        return value
