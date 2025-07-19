@@ -1,9 +1,10 @@
-from .ami import get_by_tag
-import os.path
+import argparse
 from pathlib import Path
 from typing import Any, Dict, Optional
+
 from botocore.configloader import raw_config_parse
-import argparse
+
+from .ami import get_by_tag
 
 
 class Config:
@@ -90,6 +91,7 @@ class Config:
         return self._config.get('record_name')
 
     def _get_required(self, key: str) -> str:
-        if not (value := self._config.get(key)):
+        value = self._config.get(key)
+        if not value:
             raise RuntimeError(f"Missing required parameter: {key}")
         return value

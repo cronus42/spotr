@@ -2,12 +2,11 @@ import argparse
 import sys
 from typing import NoReturn
 
-from .launch import launch
 from .destroy import destroy
-from .snapshot import snapshot
+from .launch import launch
 from .list import list_instances
+from .snapshot import snapshot
 from .version import VERSION
-
 
 parser = argparse.ArgumentParser()
 parser.add_argument('--version', action='version', version=VERSION)

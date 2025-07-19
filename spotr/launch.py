@@ -1,17 +1,16 @@
-from typing import Any
 import argparse
+from typing import Any
 
-from .pricing import get_az
-from .spot_instance import request
-from .instance import tag as tag_instance
-from .instance import get_by_instance_id
-from .instance import open_port
 from .client import build as build_client
 from .config import Config
-from .key import find_or_create as find_or_create_key
-from .spin_cursor import spin
 from .dns import build_client as dns_build_client
 from .dns import set_record
+from .instance import get_by_instance_id, open_port
+from .instance import tag as tag_instance
+from .key import find_or_create as find_or_create_key
+from .pricing import get_az
+from .spin_cursor import spin
+from .spot_instance import request
 
 
 def launch(args: argparse.Namespace) -> Any:

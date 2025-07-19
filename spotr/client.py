@@ -1,8 +1,8 @@
-import boto3
-
-import functools
 import argparse
+import functools
 from typing import Any
+
+import boto3
 
 
 def build(args: argparse.Namespace) -> Any:

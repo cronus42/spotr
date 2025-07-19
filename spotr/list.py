@@ -1,8 +1,8 @@
 import argparse
 
-from .instance import find_instances
 from .client import build as build_client
 from .config import Config
+from .instance import find_instances
 from .spin_cursor import spin
 
 

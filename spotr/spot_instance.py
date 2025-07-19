@@ -1,6 +1,6 @@
+import base64
 import random
 import time
-import base64
 from dataclasses import dataclass
 from typing import Optional
 

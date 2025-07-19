@@ -1,5 +1,6 @@
 from typing import Any
 
+
 def get_by_tag(client: Any, tag: str) -> str:
     response = client.describe_images(
         Filters=[{'Name': 'tag:project', 'Values': [tag]}]

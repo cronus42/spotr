@@ -1,5 +1,5 @@
-import time
 import argparse
+import time
 from typing import Any, Dict
 
 from .client import build as build_client

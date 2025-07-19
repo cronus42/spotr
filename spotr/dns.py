@@ -1,7 +1,8 @@
-import boto3
-import functools
 import argparse
+import functools
 from typing import Any
+
+import boto3
 
 from .config import Config
 
