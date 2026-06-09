@@ -77,6 +77,39 @@ class Config:
         return bool(self._config["ebs_optimized"])
 
     @property
+    def root_volume_size(self) -> Optional[int]:
+        raw_value = self._config.get("root_volume_size")
+        if raw_value in (None, ""):
+            return None
+        size = int(raw_value)
+        if size <= 0:
+            raise RuntimeError("root_volume_size must be greater than 0")
+        return size
+
+    @property
+    def root_device_name(self) -> Optional[str]:
+        if self.root_volume_size is None:
+            return None
+
+        existing_root_device_name = self._config.get("root_device_name")
+        if existing_root_device_name:
+            return existing_root_device_name
+
+        response = self.client.describe_images(ImageIds=[self.ami])
+        images = response.get("Images", [])
+        if not images:
+            raise RuntimeError(
+                f"Could not describe AMI {self.ami} to determine the root device name"
+            )
+
+        root_device_name = images[0].get("RootDeviceName")
+        if not root_device_name:
+            raise RuntimeError(f"AMI {self.ami} does not expose RootDeviceName")
+
+        self._config["root_device_name"] = root_device_name
+        return root_device_name
+
+    @property
     def iam_instance_profile_arn(self) -> Optional[str]:
         return self._config.get("iam_instance_profile_arn")
 

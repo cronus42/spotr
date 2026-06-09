@@ -16,7 +16,9 @@ class TestSpotInstance(unittest.TestCase):
             iam_instance_profile_arn=None,
             user_data=None,
             subnet_id='subnet-12345',
-            ebs_optimized=False
+            ebs_optimized=False,
+            root_volume_size=None,
+            root_device_name=None
         )
         fake_client = mock.Mock(boto3.client('ec2'))
         waiter_mock = mock.Mock()
@@ -55,7 +57,9 @@ class TestSpotInstance(unittest.TestCase):
             iam_instance_profile_arn=None,
             user_data=None,
             subnet_id='subnet-12345',
-            ebs_optimized=False
+            ebs_optimized=False,
+            root_volume_size=None,
+            root_device_name=None
         )
         fake_client = mock.Mock(boto3.client('ec2'))
         waiter_mock = mock.Mock()
@@ -102,7 +106,9 @@ class TestSpotInstance(unittest.TestCase):
             iam_instance_profile_arn='arn:aws:iam::123456789012:instance-profile/MyRole',
             user_data='#!/bin/bash\necho "Hello World"',
             subnet_id='subnet-12345',
-            ebs_optimized=True
+            ebs_optimized=True,
+            root_volume_size=None,
+            root_device_name=None
         )
         fake_client = mock.Mock(boto3.client('ec2'))
         waiter_mock = mock.Mock()
@@ -138,6 +144,62 @@ class TestSpotInstance(unittest.TestCase):
         self.assertEqual(decoded, '#!/bin/bash\necho "Hello World"')
         
         self.assertEqual(response, instance)
+
+    def test_spot_request_with_root_volume_size(self):
+        """Test spot request includes BlockDeviceMappings when root volume size is set"""
+        config = mock.Mock(
+            max_bid='0.30',
+            ami='ami-1234',
+            key_name='test_ssh_key',
+            type='p2.xlarge',
+            az='us-west-2a',
+            security_group_id='sg-12345',
+            iam_instance_profile_arn=None,
+            user_data=None,
+            subnet_id='subnet-12345',
+            ebs_optimized=False,
+            root_volume_size=256,
+            root_device_name='/dev/sda1'
+        )
+        fake_client = mock.Mock(boto3.client('ec2'))
+        waiter_mock = mock.Mock()
+        waiter_mock.wait = mock.Mock()
+        attrs = {
+            'request_spot_instances.return_value': {
+                'SpotInstanceRequests': [
+                    {'SpotInstanceRequestId': '123456'}
+                ]
+            },
+            'describe_spot_instance_requests.return_value': {
+                'SpotInstanceRequests': [
+                    {'InstanceId': '123456', 'Status': { 'Code': 'fulfilled' } }
+                ]
+            },
+            'get_waiter.return_value': waiter_mock
+        }
+        fake_client.configure_mock(**attrs)
+
+        instance = mock.Mock(has_security_groups=True)
+        tag = mock.Mock()
+        get_by_instance_id = mock.Mock(return_value=instance)
+        open_port = mock.Mock(return_value=True)
+        request(fake_client, config, tag, get_by_instance_id, open_port)
+
+        call_args = fake_client.request_spot_instances.call_args
+        launch_spec = call_args[1]['LaunchSpecification']
+        self.assertIn('BlockDeviceMappings', launch_spec)
+        self.assertEqual(
+            launch_spec['BlockDeviceMappings'],
+            [
+                {
+                    'DeviceName': '/dev/sda1',
+                    'Ebs': {
+                        'VolumeSize': 256,
+                        'DeleteOnTermination': True
+                    }
+                }
+            ]
+        )
 
     def test_spot_instance_request_init(self):
         """Test SpotInstanceRequest class initialization"""

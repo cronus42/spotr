@@ -27,6 +27,12 @@ launch_parser.add_argument(
 launch_parser.add_argument(
     "--subnet-id", help="id of the subnet in which instance needs to be launched"
 )
+launch_parser.add_argument(
+    "--root-volume-size-gb",
+    dest="root_volume_size",
+    type=int,
+    help="size of the root EBS volume in GiB",
+)
 launch_parser.set_defaults(func=launch)
 
 snapshot_parser = subparsers.add_parser("snapshot")

@@ -99,6 +99,7 @@ Spotr supports configuration through a ``~/.spotr/config`` file to avoid repeati
     max_bid=0.30
     type=p2.xlarge
     ebs_optimized=true
+    root_volume_size=128
     
     # Network configuration
     security_group_id=sg-XXXXXXXXXXXXXXX
@@ -134,6 +135,7 @@ Launch a new spot instance:
 .. code-block:: sh
 
     $ spotr launch --type t3.large --max-bid 0.05 --ami ami-12345678
+    $ spotr launch --type g4dn.xlarge --max-bid 1.20 --root-volume-size-gb 128
     $ spotr launch --type p3.2xlarge --max-bid 0.75  # Use latest snapshot
     $ spotr launch --ami-tag my-project  # Launch from tagged AMI
 
@@ -146,6 +148,7 @@ Options:
   - ``--key-name``: SSH key pair name
   - ``--security-group-id``: Security group ID
   - ``--subnet-id``: VPC subnet ID
+  - ``--root-volume-size-gb``: Override root EBS volume size in GiB
 
 **spotr list**
 

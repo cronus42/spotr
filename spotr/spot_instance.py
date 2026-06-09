@@ -40,26 +40,41 @@ def _perform_request(client, config):
     else:
         user_data = config.user_data.encode("ascii")
         user_data = base64.b64encode(bytes(user_data)).decode("ascii")
+    launch_specification = {
+        "ImageId": config.ami,
+        "KeyName": config.key_name,
+        "InstanceType": config.type,
+        "Placement": {
+            "AvailabilityZone": config.az,
+        },
+        "SecurityGroupIds": security_group_ids,
+        "SubnetId": config.subnet_id,
+        "EbsOptimized": config.ebs_optimized,
+        "IamInstanceProfile": {
+            "Arn": iam_instance_profile_arn,
+        },
+        "UserData": user_data,
+    }
+
+    if config.root_volume_size is not None:
+        root_device_name = config.root_device_name
+        if root_device_name is None:
+            raise RuntimeError("root_volume_size requires a resolvable root_device_name")
+        launch_specification["BlockDeviceMappings"] = [
+            {
+                "DeviceName": root_device_name,
+                "Ebs": {
+                    "VolumeSize": config.root_volume_size,
+                    "DeleteOnTermination": True,
+                },
+            }
+        ]
     response = client.request_spot_instances(
         SpotPrice=config.max_bid,
         ClientToken=random_id,
         InstanceCount=1,
         Type="one-time",
-        LaunchSpecification={
-            "ImageId": config.ami,
-            "KeyName": config.key_name,
-            "InstanceType": config.type,
-            "Placement": {
-                "AvailabilityZone": config.az,
-            },
-            "SecurityGroupIds": security_group_ids,
-            "SubnetId": config.subnet_id,
-            "EbsOptimized": config.ebs_optimized,
-            "IamInstanceProfile": {
-                "Arn": iam_instance_profile_arn,
-            },
-            "UserData": user_data,
-        },
+        LaunchSpecification=launch_specification,
     )
     return response.get("SpotInstanceRequests")[0].get("SpotInstanceRequestId")
 
