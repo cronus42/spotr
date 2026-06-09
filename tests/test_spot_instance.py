@@ -73,11 +73,11 @@ class TestSpotInstance(unittest.TestCase):
             'describe_spot_instance_requests.return_value': {
                 'SpotInstanceRequests': [
                     {
-                        'InstanceId': '123456', 
-                        'Status': { 
+                        'InstanceId': '123456',
+                        'Status': {
                             'Code': 'price-too-low',
                             'Message': 'Your bid price is too low'
-                        } 
+                        }
                     }
                 ]
             },
@@ -88,10 +88,8 @@ class TestSpotInstance(unittest.TestCase):
         tag = mock.Mock()
         get_by_instance_id = mock.Mock()
         open_port = mock.Mock()
-        
         with self.assertRaises(RuntimeError) as cm:
             request(fake_client, config, tag, get_by_instance_id, open_port)
-            
         self.assertEqual(str(cm.exception), 'Your bid price is too low')
 
     def test_spot_request_with_user_data(self):
@@ -133,7 +131,6 @@ class TestSpotInstance(unittest.TestCase):
         get_by_instance_id = mock.Mock(return_value=instance)
         open_port = mock.Mock(return_value=True)
         response = request(fake_client, config, tag, get_by_instance_id, open_port)
-        
         # Verify that the request was made with proper encoding
         call_args = fake_client.request_spot_instances.call_args
         self.assertIn('UserData', call_args[1]['LaunchSpecification'])
@@ -142,7 +139,6 @@ class TestSpotInstance(unittest.TestCase):
         import base64
         decoded = base64.b64decode(user_data.encode('ascii')).decode('ascii')
         self.assertEqual(decoded, '#!/bin/bash\necho "Hello World"')
-        
         self.assertEqual(response, instance)
 
     def test_spot_request_with_root_volume_size(self):
@@ -210,9 +206,7 @@ class TestSpotInstance(unittest.TestCase):
                 'Message': 'Your spot request has been fulfilled'
             }
         }
-        
         spot_request = SpotInstanceRequest(response_data)
-        
         self.assertEqual(spot_request.instance_id, 'i-1234567890abcdef0')
         self.assertEqual(spot_request.status_code, 'fulfilled')
         self.assertEqual(spot_request.status_message, 'Your spot request has been fulfilled')
